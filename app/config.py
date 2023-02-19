@@ -19,6 +19,11 @@ networks_url = {
     'arbitrum': ARBITRUM_URL,
 }
 
+chain_gas = {
+    42170: 2000000,
+    42161: 500000,
+}
+
 contracts_path = {
     "ERC20": "contract/ERC20.json",
     "ERC721": "contract/ERC721.json"

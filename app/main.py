@@ -16,7 +16,7 @@ from web3 import Account, Web3
 from eth_account.signers.local import LocalAccount
 
 from app.config import AMOUNT_HIGH, AMOUNT_LOW, networks_url
-from app.config import contracts_path, chains
+from app.config import contracts_path, chain_gas
 
 logger.add(
     "log/debug.log",
@@ -39,7 +39,7 @@ def _deploy_contract(w3, wallet, contract, *args) -> HexBytes:
         {
             "chainId": w3.eth.chain_id,
             "gasPrice": w3.eth.gas_price,
-            "gas": 1000000,
+            "gas": chain_gas[w3.eth.chain_id],
             "from": wallet.address,
             "value": 0,
             "nonce": w3.eth.getTransactionCount(wallet.address)
