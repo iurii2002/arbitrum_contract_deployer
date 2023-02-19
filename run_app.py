@@ -1,7 +1,8 @@
 from app.main import deploy_contract
 
 if __name__ == "__main__":
-    private_key = ""
-    contract = ""
-    network = ""
-    deploy_contract()
+    """
+    contract_name - possible variants - ERC20, ERC721, CryptoSchool
+    network - possible variants - nova, arbitrum
+    """
+    deploy_contract("ERC20", "nova")
