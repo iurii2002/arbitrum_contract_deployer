@@ -5,8 +5,7 @@ dotenv.load_dotenv()
 
 ARBITRUM_URL: str = os.environ["ARBITRUM_URL"]
 ARBITRUM_NOVA_URL: str = os.environ["ARBITRUM_NOVA_URL"]
-AMOUNT_LOW: float = float(os.environ["AMOUNT_LOW"])
-AMOUNT_HIGH: float = float(os.environ["AMOUNT_HIGH"])
+SHARDEUM_URL: str = os.environ["SHARDEUM_URL"]
 
 chains = {
     "nova": 42170,
@@ -17,14 +16,17 @@ chains = {
 networks_url = {
     'nova': ARBITRUM_NOVA_URL,
     'arbitrum': ARBITRUM_URL,
+    'shardeum': SHARDEUM_URL,
 }
 
 chain_gas = {
     42170: 2000000,
-    42161: 500000,
+    42161: 1000000,
+    8082: 2000000,
 }
 
 contracts_path = {
     "ERC20": "contract/ERC20.json",
-    "ERC721": "contract/ERC721.json"
+    "ERC721": "contract/ERC721.json",
+    "CryptoSchool": "contract/CryptoSchool.json",
 }

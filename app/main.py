@@ -1,7 +1,3 @@
-"""
-Dev: https://t.me/python_web3
-"""
-
 import json
 import random
 import time
@@ -15,8 +11,7 @@ from typing import List
 from web3 import Account, Web3
 from eth_account.signers.local import LocalAccount
 
-from app.config import AMOUNT_HIGH, AMOUNT_LOW, networks_url
-from app.config import contracts_path, chain_gas
+from app.config import contracts_path, chain_gas, networks_url
 
 logger.add(
     "log/debug.log",
@@ -93,36 +88,39 @@ def deploy_contract(contract_name: str, network: str) -> None:
             bytecode=bytecode)
 
         for account in accounts:
-            if w3.eth.get_balance(account.address) < Web3.toWei(0.01, 'ether'):
-                logger.error(f"not enough bvalance on wallet {account.address}")
-                continue
+            try:
+                # if w3.eth.get_balance(account.address) < Web3.toWei(0.001, 'ether'):
+                #     logger.error(f"not enough bvalance on wallet {account.address}")
+                #     continue
 
-            txn_hash = None
-            if contract_name == "ERC20":
-                random_word = get_random_word().capitalize()
-                name = random_word + " token"
-                symbol = random_word[:3].upper()
-                amount = 10 ** random.randint(1, 10) * (10**18)
-                txn_hash = _deploy_contract(w3, account, contract, name, symbol, amount)
+                txn_hash = None
+                if contract_name == "ERC20":
+                    random_word = get_random_word().capitalize()
+                    name = random_word + " token"
+                    symbol = random_word[:3].upper()
+                    amount = 10 ** random.randint(1, 10) * (10**18)
+                    txn_hash = _deploy_contract(w3, account, contract, name, symbol, amount)
 
-            elif contract_name == "ERC721":
-                random_word = get_random_word()
-                name = random_word + " token"
-                symbol = random_word[:3].capitalize()
-                txn_hash = _deploy_contract(w3, account, contract, name, symbol)
+                elif contract_name == "ERC721":
+                    random_word = get_random_word()
+                    name = random_word + " token"
+                    symbol = random_word[:3].capitalize()
+                    txn_hash = _deploy_contract(w3, account, contract, name, symbol)
 
-            elif contract_name == "CryptoSchool":
-                txn_hash = _deploy_contract(w3, account, contract)
+                elif contract_name == "CryptoSchool":
+                    txn_hash = _deploy_contract(w3, account, contract)
 
-            else:
-                logger.error("Wrong contract name, please use correct one")
+                else:
+                    logger.error("Wrong contract name, please use correct one")
 
-            if txn_hash is not None:
-                logger.info("Waiting 5 seconds until transaction is minted")
-                time.sleep(5)
-                contract_address = w3.eth.get_transaction_receipt(
-                    txn_hash).contractAddress
-                logger.info(f"Deployed contract with the address {contract_address}")
+                if txn_hash is not None:
+                    logger.info("Waiting 5 seconds until transaction is minted")
+                    time.sleep(5)
+                    contract_address = w3.eth.get_transaction_receipt(
+                        txn_hash).contractAddress
+                    logger.info(f"Deployed contract with the address {contract_address}")
+            except Exception as err:
+                logger.error(f"Account account {err}")
 
         logger.info("Finished")
     except Exception as err:
