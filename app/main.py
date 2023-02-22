@@ -30,20 +30,20 @@ def load_abi(contract_name) -> str:
 
 def _deploy_contract(w3, wallet, contract, *args) -> HexBytes:
 
-    transaction = contract.constructor(*args).buildTransaction(
+    transaction = contract.constructor(*args).build_transaction(
         {
             "chainId": w3.eth.chain_id,
             "gasPrice": w3.eth.gas_price,
             "gas": chain_gas[w3.eth.chain_id],
             "from": wallet.address,
             "value": 0,
-            "nonce": w3.eth.getTransactionCount(wallet.address)
+            "nonce": w3.eth.get_transaction_count(wallet.address)
         }
     )
 
     signed_txn = wallet.sign_transaction(transaction)
 
-    txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+    txn_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
     logger.info(
         f"Deploy contract by {wallet.address}, transaction: {txn_hash.hex()}.")
     return txn_hash
@@ -55,7 +55,6 @@ def set_network(network: str) -> Web3:
 
 
 def load_wallets() -> List[LocalAccount]:
-    """Загрузка кошельков из текстовика."""
     file = Path("app/wallets.txt").open()
     return [Account.from_key(line.replace("\n", "")) for line in file.readlines()]
 
@@ -87,7 +86,7 @@ def deploy_contract(contract_name: str, network: str) -> None:
             abi=abi,
             bytecode=bytecode)
 
-        with open("app/contracts1.txt", "a") as contracts_file:
+        with open("app/contracts.txt", "a") as contracts_file:
             for account in accounts:
                 try:
                     if w3.eth.get_balance(account.address) < Web3.toWei(0.001, 'ether'):
@@ -98,14 +97,14 @@ def deploy_contract(contract_name: str, network: str) -> None:
                     if contract_name == "ERC20":
                         random_word = get_random_word().capitalize()
                         name = random_word + " token"
-                        symbol = random_word[:3].upper()
+                        symbol = random_word[:3]
                         amount = 10 ** random.randint(4, 10)
                         txn_hash = _deploy_contract(w3, account, contract, name, symbol, amount)
 
                     elif contract_name == "ERC721":
-                        random_word = get_random_word()
+                        random_word = get_random_word().capitalize()
                         name = random_word + " token"
-                        symbol = random_word[:3].capitalize()
+                        symbol = random_word[:3].upper()
                         txn_hash = _deploy_contract(w3, account, contract, name, symbol)
 
                     elif contract_name == "CryptoSchool":

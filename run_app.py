@@ -6,4 +6,4 @@ if __name__ == "__main__":
     contract_name - possible variants - ERC20, ERC721, CryptoSchool
     network - possible variants - nova, arbitrum, shardeum
     """
-    deploy_contract("ERC721", "arbitrum")
+    deploy_contract("ERC20", "shardeum")
